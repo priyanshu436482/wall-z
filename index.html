@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>Wallz - Race your pawn. Drop walls to slow your opponent.</title>
+  <meta name="description" content="Play Wallz (Quoridor), the ultimate strategic race board game. Play against the smart pathfinding AI or challenge a friend in local multiplayer. Real-time path calculations and sleek design.">
+  <meta name="keywords" content="wallz, quoridor, board game, strategy, pathfinding, browser game, AI, glassmorphism, web audio, local multiplayer">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- LOBBY SCREEN (LANDING DASHBOARD) -->
+  <div id="lobby-screen" class="screen">
+    <header>
+      <h1 class="logo" id="main-logo">WALL<span>Z</span></h1>
+    </header>
+
+    <main class="lobby-container">
+      <!-- Hero Mode Selection Panel -->
+      <section class="hero-card" id="hero-panel">
+        <div class="hero-info">
+          <h1>Race your pawn to the other side.</h1>
+          <p>Drop walls to slow your opponent down. A beautiful, pure JavaScript implementation of the classic strategy board game Quoridor.</p>
+        </div>
+
+        <div class="hero-preview">
+          <!-- A cute mock layout of the board to capture immediate interest -->
+          <div class="mini-grid" aria-hidden="true">
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"><div class="mini-pawn p2"></div></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"><div class="mini-pawn p1"></div></div>
+            <div class="mini-cell"></div>
+            <div class="mini-cell"></div>
+          </div>
+        </div>
+
+        <!-- Game Configuration Section -->
+        <div class="game-config-section">
+          <div class="config-group">
+            <span class="config-label">AI Difficulty</span>
+            <div class="config-segmented-control" id="difficulty-select" role="radiogroup" aria-label="AI Difficulty Selector">
+              <button type="button" class="config-tab" data-value="easy" role="radio" aria-checked="false">🤖 Easy</button>
+              <button type="button" class="config-tab active" data-value="medium" role="radio" aria-checked="true">🧠 Medium</button>
+              <button type="button" class="config-tab" data-value="hard" role="radio" aria-checked="false">🔥 Hard</button>
+            </div>
+          </div>
+
+          <div class="config-group">
+            <span class="config-label">Board Size</span>
+            <div class="config-segmented-control" id="boardsize-select" role="radiogroup" aria-label="Board Size Selector">
+              <button type="button" class="config-tab" data-value="7" role="radio" aria-checked="false">⚡ 7x7</button>
+              <button type="button" class="config-tab active" data-value="9" role="radio" aria-checked="true">🏆 9x9</button>
+              <button type="button" class="config-tab" data-value="11" role="radio" aria-checked="false">🏰 11x11</button>
+            </div>
+          </div>
+        </div>
+
+        <nav class="menu-actions" aria-label="Game Modes Selection">
+          <button id="play-ai" class="btn btn-primary" aria-label="Play against computer AI">
+            <span>Play Computer</span>
+            <span class="btn-icon">🤖 &rarr;</span>
+          </button>
+          
+          <button id="play-friend" class="btn btn-secondary" aria-label="Play against a friend in pass-and-play local multiplayer">
+            <span>Play a Friend</span>
+            <span class="btn-icon">👥 &rarr;</span>
+          </button>
+        </nav>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen" class="screen hidden">
+    <div class="game-layout">
+      
+      <!-- HUD / Top Bar -->
+      <nav class="game-header" aria-label="Game navigation and status">
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="back-lobby" class="back-btn" aria-label="Exit current match and return to lobby">
+            <span>&larr; Lobby</span>
+          </button>
+          <button id="undo-btn" class="back-btn" aria-label="Undo last move">
+            <span>↩ Undo</span>
+          </button>
+        </div>
+        <div class="game-title-hud">WALLZ</div>
+        <div class="status-hud" id="hud-match-type">CASUAL 3+1</div>
+      </nav>
+
+      <main class="game-arena">
+        <!-- Player 1 Profile Card (Human: Pink) -->
+        <section class="player-panel p1" id="panel-p1" aria-label="Player 1 stats">
+          <div class="player-details">
+            <div class="player-avatar pink">P1</div>
+            <h2 class="player-name">Player 1</h2>
+            <div class="player-desc">Goal: Top Row</div>
+          </div>
+          
+          <div class="wall-rack-container">
+            <div class="wall-rack-title">Walls Left</div>
+            <div class="wall-rack" id="rack-p1" role="img" aria-label="Player 1 remaining walls count">
+              <!-- Dynamically populated in game.js -->
+            </div>
+          </div>
+
+          <div class="timer-container">
+            <div class="timer-label">Time Remaining</div>
+            <div class="timer-value" id="timer-p1" aria-live="polite">3:00</div>
+          </div>
+        </section>
+
+        <!-- The Interactive 17x17 Grid Board Container -->
+        <section class="board-container" aria-label="Wallz Game Board">
+          <div class="board" id="board">
+            <!-- Dynamically populated in game.js -->
+          </div>
+        </section>
+
+        <!-- Player 2 Profile Card (Human or AI: Teal) -->
+        <section class="player-panel p2" id="panel-p2" aria-label="Player 2 stats">
+          <div class="player-details">
+            <div class="player-avatar teal">P2</div>
+            <h2 class="player-name" id="p2-name">Computer AI</h2>
+            <div class="player-desc" id="p2-desc">Shortest-path heuristic engine</div>
+          </div>
+          
+          <div class="wall-rack-container">
+            <div class="wall-rack-title">Walls Left</div>
+            <div class="wall-rack" id="rack-p2" role="img" aria-label="Player 2 remaining walls count">
+              <!-- Dynamically populated in game.js -->
+            </div>
+          </div>
+
+          <div class="timer-container">
+            <div class="timer-label">Time Remaining</div>
+            <div class="timer-value" id="timer-p2" aria-live="polite">3:00</div>
+          </div>
+        </section>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- VICTORY / DEFEAT MODAL OVERLAY -->
+  <div id="modal-overlay" class="modal-overlay hidden" aria-modal="true" role="dialog">
+    <div class="modal-content">
+      <div id="modal-icon" class="modal-icon victory">🏆</div>
+      <h2 id="modal-title" class="modal-title">Victory is Yours!</h2>
+      <p id="modal-desc" class="modal-desc">Spectacular work! You outsmarted the pathfinding algorithm.</p>
+      
+      <div class="modal-actions">
+        <button id="play-again-btn" class="btn btn-primary" aria-label="Play game again with same options">Play Again</button>
+        <button id="modal-lobby-btn" class="btn" style="background: rgba(255,255,255,0.03);" aria-label="Return to landing lobby dashboard">Return to Lobby</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOAD SCRIPT DEPENDENCIES -->
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
