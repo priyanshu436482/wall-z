@@ -2,57 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- SEO Meta Tags -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#14110d">
+  <meta name="description" content="Play Wallz (Quoridor), the ultimate strategic race board game. Play against the smart pathfinding AI, challenge a friend locally, or play online. Real-time path calculations and sleek design.">
+  <meta name="keywords" content="wallz, quoridor, board game, strategy, pathfinding, browser game, AI, multiplayer, PWA">
+  <meta property="og:title" content="Wallz — Race. Block. Win.">
+  <meta property="og:description" content="Strategic Quoridor race. Drop walls, outsmart the AI, or duel friends online.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Wallz — Race. Block. Win.">
+  <meta name="twitter:description" content="Strategic Quoridor race. Drop walls, outsmart the AI, or duel friends online.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
   <title>Wallz - Race your pawn. Drop walls to slow your opponent.</title>
-  <meta name="description" content="Play Wallz (Quoridor), the ultimate strategic race board game. Play against the smart pathfinding AI or challenge a friend in local multiplayer. Real-time path calculations and sleek design.">
-  <meta name="keywords" content="wallz, quoridor, board game, strategy, pathfinding, browser game, AI, glassmorphism, web audio, local multiplayer">
-  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- LOBBY SCREEN (LANDING DASHBOARD) -->
+  <!-- LOBBY SCREEN -->
   <div id="lobby-screen" class="screen">
-    <header>
+    <header class="lobby-header">
       <h1 class="logo" id="main-logo">WALL<span>Z</span></h1>
+      <div class="lobby-header-actions">
+        <button type="button" id="mute-btn-lobby" class="icon-btn" aria-label="Toggle mute" title="Mute">🔊</button>
+        <button type="button" id="how-to-play-btn" class="icon-btn" aria-label="How to play" title="How to play">?</button>
+      </div>
     </header>
 
     <main class="lobby-container">
-      <!-- Hero Mode Selection Panel -->
       <section class="hero-card" id="hero-panel">
         <div class="hero-info">
           <h1>Race your pawn to the other side.</h1>
-          <p>Drop walls to slow your opponent down. A beautiful, pure JavaScript implementation of the classic strategy board game Quoridor.</p>
+          <p>Drop walls to slow your opponent down. A pure JavaScript Quoridor with AI, local, and online play.</p>
         </div>
 
         <div class="hero-preview">
-          <!-- A cute mock layout of the board to capture immediate interest -->
           <div class="mini-grid" aria-hidden="true">
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"><div class="mini-pawn p2"></div></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
-            
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
-            
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
-            
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
-            
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"><div class="mini-pawn p1"></div></div>
@@ -61,132 +67,217 @@
           </div>
         </div>
 
-        <!-- Game Configuration Section -->
+        <div class="stats-strip" id="stats-strip" aria-label="Your stats">
+          <div class="stat-pill"><span class="stat-val" id="stat-wins">0</span><span class="stat-lbl">Wins</span></div>
+          <div class="stat-pill"><span class="stat-val" id="stat-losses">0</span><span class="stat-lbl">Losses</span></div>
+          <div class="stat-pill"><span class="stat-val" id="stat-streak">0</span><span class="stat-lbl">Streak</span></div>
+        </div>
+
         <div class="game-config-section">
           <div class="config-group">
             <span class="config-label">AI Difficulty</span>
-            <div class="config-segmented-control" id="difficulty-select" role="radiogroup" aria-label="AI Difficulty Selector">
-              <button type="button" class="config-tab" data-value="easy" role="radio" aria-checked="false">🤖 Easy</button>
-              <button type="button" class="config-tab active" data-value="medium" role="radio" aria-checked="true">🧠 Medium</button>
-              <button type="button" class="config-tab" data-value="hard" role="radio" aria-checked="false">🔥 Hard</button>
+            <div class="config-segmented-control" id="difficulty-select" role="radiogroup" aria-label="AI Difficulty">
+              <button type="button" class="config-tab" data-value="easy" role="radio" aria-checked="false">Easy</button>
+              <button type="button" class="config-tab active" data-value="medium" role="radio" aria-checked="true">Medium</button>
+              <button type="button" class="config-tab" data-value="hard" role="radio" aria-checked="false">Hard</button>
             </div>
           </div>
 
           <div class="config-group">
             <span class="config-label">Board Size</span>
-            <div class="config-segmented-control" id="boardsize-select" role="radiogroup" aria-label="Board Size Selector">
-              <button type="button" class="config-tab" data-value="7" role="radio" aria-checked="false">⚡ 7x7</button>
-              <button type="button" class="config-tab active" data-value="9" role="radio" aria-checked="true">🏆 9x9</button>
-              <button type="button" class="config-tab" data-value="11" role="radio" aria-checked="false">🏰 11x11</button>
+            <div class="config-segmented-control" id="boardsize-select" role="radiogroup" aria-label="Board Size">
+              <button type="button" class="config-tab" data-value="7" role="radio" aria-checked="false">7×7</button>
+              <button type="button" class="config-tab active" data-value="9" role="radio" aria-checked="true">9×9</button>
+              <button type="button" class="config-tab" data-value="11" role="radio" aria-checked="false">11×11</button>
+            </div>
+          </div>
+
+          <div class="config-group">
+            <span class="config-label">Timer</span>
+            <div class="config-segmented-control" id="timer-select" role="radiogroup" aria-label="Timer Preset">
+              <button type="button" class="config-tab active" data-value="3+1" role="radio" aria-checked="true">3+1</button>
+              <button type="button" class="config-tab" data-value="5+0" role="radio" aria-checked="false">5+0</button>
+              <button type="button" class="config-tab" data-value="untimed" role="radio" aria-checked="false">Off</button>
+            </div>
+          </div>
+
+          <div class="config-group">
+            <span class="config-label">Your Side (vs AI)</span>
+            <div class="config-segmented-control" id="side-select" role="radiogroup" aria-label="Your Side">
+              <button type="button" class="config-tab active" data-value="1" role="radio" aria-checked="true">Teal P1</button>
+              <button type="button" class="config-tab" data-value="2" role="radio" aria-checked="false">Rose P2</button>
             </div>
           </div>
         </div>
 
-        <nav class="menu-actions" aria-label="Game Modes Selection">
-          <button id="play-ai" class="btn btn-primary" aria-label="Play against computer AI">
+        <nav class="menu-actions" aria-label="Game Modes">
+          <button id="play-ai" class="btn btn-primary" aria-label="Play against computer">
             <span>Play Computer</span>
-            <span class="btn-icon">🤖 &rarr;</span>
+            <span class="btn-icon">→</span>
           </button>
-          
-          <button id="play-friend" class="btn btn-secondary" aria-label="Play against a friend in pass-and-play local multiplayer">
-            <span>Play a Friend</span>
-            <span class="btn-icon">👥 &rarr;</span>
+          <button id="play-friend" class="btn btn-secondary" aria-label="Local pass and play">
+            <span>Play a Friend (Local)</span>
+            <span class="btn-icon">→</span>
+          </button>
+          <button id="play-online" class="btn btn-online" aria-label="Play online">
+            <span>Play Online</span>
+            <span class="btn-icon">→</span>
           </button>
         </nav>
       </section>
-
     </main>
-
   </div>
 
   <!-- GAME SCREEN -->
   <div id="game-screen" class="screen hidden">
     <div class="game-layout">
-      
-      <!-- HUD / Top Bar -->
-      <nav class="game-header" aria-label="Game navigation and status">
-        <div style="display: flex; gap: 0.5rem;">
-          <button id="back-lobby" class="back-btn" aria-label="Exit current match and return to lobby">
-            <span>&larr; Lobby</span>
-          </button>
-          <button id="undo-btn" class="back-btn" aria-label="Undo last move">
-            <span>↩ Undo</span>
-          </button>
+      <nav class="game-header" aria-label="Game navigation">
+        <div class="header-left">
+          <button id="back-lobby" class="back-btn" aria-label="Return to lobby"><span>← Lobby</span></button>
+          <button id="undo-btn" class="back-btn" aria-label="Undo last move" disabled><span>↩ Undo</span></button>
         </div>
         <div class="game-title-hud">WALLZ</div>
-        <div class="status-hud" id="hud-match-type">CASUAL 3+1</div>
+        <div class="header-right">
+          <button type="button" id="path-preview-btn" class="back-btn toggle-btn" aria-pressed="false" title="Show shortest path">Path</button>
+          <button type="button" id="history-toggle-btn" class="back-btn" aria-label="Toggle move history">Moves</button>
+          <button type="button" id="mute-btn-game" class="icon-btn" aria-label="Toggle mute">🔊</button>
+          <div class="status-hud" id="hud-match-type">CASUAL 3+1</div>
+        </div>
       </nav>
 
       <main class="game-arena">
-        <!-- Player 1 Profile Card (Human: Pink) -->
-        <section class="player-panel p1" id="panel-p1" aria-label="Player 1 stats">
+        <section class="player-panel p1" id="panel-p1" aria-label="Player 1">
           <div class="player-details">
-            <div class="player-avatar pink">P1</div>
-            <h2 class="player-name">Player 1</h2>
-            <div class="player-desc">Goal: Top Row</div>
+            <div class="player-avatar teal">P1</div>
+            <h2 class="player-name" id="p1-name">Player 1</h2>
+            <div class="player-desc" id="p1-desc">Goal: Top Row</div>
           </div>
-          
           <div class="wall-rack-container">
             <div class="wall-rack-title">Walls Left</div>
-            <div class="wall-rack" id="rack-p1" role="img" aria-label="Player 1 remaining walls count">
-              <!-- Dynamically populated in game.js -->
-            </div>
+            <div class="wall-rack" id="rack-p1" role="img" aria-label="Player 1 walls"></div>
           </div>
-
-          <div class="timer-container">
+          <div class="timer-container" id="timer-wrap-p1">
             <div class="timer-label">Time Remaining</div>
             <div class="timer-value" id="timer-p1" aria-live="polite">3:00</div>
           </div>
         </section>
 
-        <!-- The Interactive 17x17 Grid Board Container -->
-        <section class="board-container" aria-label="Wallz Game Board">
-          <div class="board" id="board">
-            <!-- Dynamically populated in game.js -->
+        <section class="board-container" aria-label="Game Board">
+          <div class="board-stage">
+            <div class="board" id="board" tabindex="0"></div>
+            <div id="ai-thinking" class="ai-thinking hidden" aria-live="polite">AI thinking…</div>
           </div>
+          <div class="board-controls">
+            <button type="button" id="wall-mode-btn" class="board-ctrl-btn" aria-pressed="false" title="Wall placement mode (W)">🧱 Wall</button>
+            <button type="button" id="rotate-wall-btn" class="board-ctrl-btn" title="Rotate wall (R)">↻ Rotate</button>
+          </div>
+          <p class="controls-hint">Click cell to move · Hover gap for wall · <kbd>R</kbd> rotate · <kbd>W</kbd> wall mode · Arrows + <kbd>Enter</kbd></p>
         </section>
 
-        <!-- Player 2 Profile Card (Human or AI: Teal) -->
-        <section class="player-panel p2" id="panel-p2" aria-label="Player 2 stats">
+        <section class="player-panel p2" id="panel-p2" aria-label="Player 2">
           <div class="player-details">
-            <div class="player-avatar teal">P2</div>
+            <div class="player-avatar pink">P2</div>
             <h2 class="player-name" id="p2-name">Computer AI</h2>
             <div class="player-desc" id="p2-desc">Shortest-path heuristic engine</div>
           </div>
-          
           <div class="wall-rack-container">
             <div class="wall-rack-title">Walls Left</div>
-            <div class="wall-rack" id="rack-p2" role="img" aria-label="Player 2 remaining walls count">
-              <!-- Dynamically populated in game.js -->
-            </div>
+            <div class="wall-rack" id="rack-p2" role="img" aria-label="Player 2 walls"></div>
           </div>
-
-          <div class="timer-container">
+          <div class="timer-container" id="timer-wrap-p2">
             <div class="timer-label">Time Remaining</div>
             <div class="timer-value" id="timer-p2" aria-live="polite">3:00</div>
           </div>
         </section>
       </main>
 
+      <aside id="move-history-panel" class="move-history-panel hidden" aria-label="Move history">
+        <div class="history-header">
+          <h3>Move History</h3>
+          <button type="button" id="close-history-btn" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <ol id="move-history-list" class="move-history-list"></ol>
+        <div class="history-actions">
+          <button type="button" id="replay-btn" class="btn btn-small" disabled>Replay from start</button>
+        </div>
+      </aside>
     </div>
   </div>
 
-  <!-- VICTORY / DEFEAT MODAL OVERLAY -->
+  <!-- VICTORY MODAL -->
   <div id="modal-overlay" class="modal-overlay hidden" aria-modal="true" role="dialog">
     <div class="modal-content">
       <div id="modal-icon" class="modal-icon victory">🏆</div>
       <h2 id="modal-title" class="modal-title">Victory is Yours!</h2>
-      <p id="modal-desc" class="modal-desc">Spectacular work! You outsmarted the pathfinding algorithm.</p>
-      
+      <p id="modal-desc" class="modal-desc">Spectacular work!</p>
       <div class="modal-actions">
-        <button id="play-again-btn" class="btn btn-primary" aria-label="Play game again with same options">Play Again</button>
-        <button id="modal-lobby-btn" class="btn" style="background: rgba(255,255,255,0.03);" aria-label="Return to landing lobby dashboard">Return to Lobby</button>
+        <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+        <button id="modal-lobby-btn" class="btn" style="background: rgba(255,255,255,0.03);">Return to Lobby</button>
       </div>
     </div>
   </div>
 
-  <!-- LOAD SCRIPT DEPENDENCIES -->
+  <!-- TUTORIAL MODAL -->
+  <div id="tutorial-overlay" class="modal-overlay hidden" aria-modal="true" role="dialog">
+    <div class="modal-content tutorial-content">
+      <h2 class="modal-title">How to Play Wallz</h2>
+      <ol class="tutorial-steps">
+        <li><strong>Goal:</strong> Race your pawn to the opposite side of the board.</li>
+        <li><strong>Moves:</strong> Each turn, either move one square (or jump over an adjacent opponent) <em>or</em> place a wall.</li>
+        <li><strong>Jumps:</strong> If blocked behind the opponent, you may jump diagonally to either side.</li>
+        <li><strong>Walls:</strong> Hover near cell gaps (or use Wall mode on mobile). Press <kbd>R</kbd> or right-click to flip orientation. Walls cannot fully trap either player.</li>
+        <li><strong>Strategy:</strong> Shorten your path, lengthen theirs — and don’t waste walls.</li>
+      </ol>
+      <div class="modal-actions">
+        <button id="tutorial-close-btn" class="btn btn-primary">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM LEAVE MODAL -->
+  <div id="confirm-overlay" class="modal-overlay hidden" aria-modal="true" role="dialog">
+    <div class="modal-content">
+      <h2 class="modal-title">Leave match?</h2>
+      <p class="modal-desc">Your current game progress will be lost.</p>
+      <div class="modal-actions">
+        <button id="confirm-leave-btn" class="btn btn-primary">Leave</button>
+        <button id="cancel-leave-btn" class="btn" style="background: rgba(255,255,255,0.03);">Stay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONLINE LOBBY MODAL -->
+  <div id="online-overlay" class="modal-overlay hidden" aria-modal="true" role="dialog">
+    <div class="modal-content online-content">
+      <h2 class="modal-title">Play Online</h2>
+      <p class="modal-desc">Host a room or join a friend’s code. Uses peer-to-peer (PeerJS).</p>
+      <div class="online-actions">
+        <button id="host-room-btn" class="btn btn-primary">Host Room</button>
+        <div class="join-row">
+          <input type="text" id="join-code-input" class="join-input" placeholder="Room code" maxlength="16" autocomplete="off" spellcheck="false">
+          <button id="join-room-btn" class="btn btn-secondary">Join</button>
+        </div>
+      </div>
+      <div id="online-status" class="online-status hidden"></div>
+      <div id="online-room-code" class="online-room-code hidden">
+        <span>Share this code:</span>
+        <strong id="room-code-display"></strong>
+        <button type="button" id="copy-code-btn" class="btn btn-small">Copy</button>
+      </div>
+      <button id="online-cancel-btn" class="btn" style="background: rgba(255,255,255,0.03); margin-top: 0.5rem;">Cancel</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <script src="audio.js"></script>
+  <script src="online.js"></script>
   <script src="game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
