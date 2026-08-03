@@ -2,7 +2,7 @@
   "name": "Wallz",
   "short_name": "Wallz",
   "description": "Race your pawn. Drop walls. Quoridor strategy game.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#14110d",
   "theme_color": "#14110d",

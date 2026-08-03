@@ -1,10 +1,12 @@
+import Peer from 'peerjs';
+
 // Online multiplayer via PeerJS (peer-to-peer)
 // Host = Player 1, Guest = Player 2
 
-const OnlineNet = {
+export const OnlineNet = {
   peer: null,
   conn: null,
-  role: null, // 'host' | 'guest'
+  role: null,
   roomCode: null,
   onReady: null,
   onMessage: null,
@@ -49,10 +51,6 @@ const OnlineNet = {
   host() {
     return new Promise((resolve, reject) => {
       this.destroy();
-      if (typeof Peer === 'undefined') {
-        reject(new Error('PeerJS failed to load'));
-        return;
-      }
 
       const code = 'WZ' + Math.random().toString(36).slice(2, 8).toUpperCase();
       this.role = 'host';
@@ -64,9 +62,9 @@ const OnlineNet = {
         config: {
           iceServers: [
             { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-          ]
-        }
+            { urls: 'stun:stun1.l.google.com:19302' },
+          ],
+        },
       });
 
       this.peer.on('open', (id) => {
@@ -89,10 +87,6 @@ const OnlineNet = {
   join(code) {
     return new Promise((resolve, reject) => {
       this.destroy();
-      if (typeof Peer === 'undefined') {
-        reject(new Error('PeerJS failed to load'));
-        return;
-      }
 
       const clean = String(code || '').trim().toUpperCase();
       if (!clean) {
@@ -109,9 +103,9 @@ const OnlineNet = {
         config: {
           iceServers: [
             { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-          ]
-        }
+            { urls: 'stun:stun1.l.google.com:19302' },
+          ],
+        },
       });
 
       this.peer.on('open', () => {
@@ -133,5 +127,5 @@ const OnlineNet = {
       return true;
     }
     return false;
-  }
+  },
 };

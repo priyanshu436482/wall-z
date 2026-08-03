@@ -1,11 +1,7 @@
-const CACHE = 'wallz-v3';
+const CACHE = 'wallz-react-v1';
 const ASSETS = [
   './',
   './index.html',
-  './style.css',
-  './game.js',
-  './audio.js',
-  './online.js',
   './favicon.svg',
   './manifest.json'
 ];
