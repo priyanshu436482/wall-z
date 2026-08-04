@@ -3,10 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://priyanshu436482.github.io/wall-z",
+  "homepage": "https://priyanshu436482.github.io/Wall-z",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node init && vite",
+    "build": "node init && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist -b gh-pages -m \"deploy: update GitHub Pages\""
   },
