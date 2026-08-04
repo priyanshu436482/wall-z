@@ -2,10 +2,6 @@
 
 React Quoridor game — AI, local, and online play.
 
-## Live site
-
-https://priyanshu436482.github.io/wall-z/
-
 ## Develop
 
 ```bash
@@ -13,11 +9,8 @@ npm install
 npm run dev
 ```
 
-## Deploy to GitHub Pages
+## Build
 
 ```bash
-git push origin main
-npm run deploy
+npm run build
 ```
-
-Then in GitHub: **Settings → Pages → Deploy from a branch → `gh-pages` / (root)**.

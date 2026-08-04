@@ -3,12 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://priyanshu436482.github.io/wall-z",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist -b gh-pages -m \"deploy: update GitHub Pages\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "peerjs": "^1.5.4",
@@ -17,7 +15,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.5.2",
-    "gh-pages": "^6.3.0",
     "vite": "^6.3.5"
   }
 }
